@@ -1,52 +1,33 @@
-I"I<h2 id="配置">配置</h2>
+I"
+<h2 id="配置">配置</h2>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 git config <span class="nt">--global</span> user.name <span class="s1">'name'</span>
 
 git config <span class="nt">--global</span> user.email <span class="s1">'mailbox@*’
+
 </span></code></pre></div></div>
 
 <h2 id="提交">提交</h2>
 
+<h3 id="初次提交">初次提交</h3>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="c"># 初次提交</span>
-
 git init
 
 git add <span class="nb">.</span>
 
 git commit <span class="nt">-m</span> <span class="s1">'commit message'</span>
 
-git remote add origin <span class="k">*</span>@<span class="k">*</span>.git
+git remote add origin &lt;repository-url&gt;
 
-git push <span class="nt">-u</span> origin master
+git push <span class="nt">-u</span> origin &lt;branch&gt;
 
-<span class="c"># 远程分支合并提交</span>
+</code></pre></div></div>
 
-git init
+<h3 id="保留当前代码删除所有提交历史">保留当前代码删除所有提交历史</h3>
 
-git add <span class="nb">.</span>
-
-git commit <span class="nt">-m</span> <span class="s1">'commit message'</span>
-
-git remote add origin <span class="k">*</span>@<span class="k">*</span>.git
-
-git pull origin master <span class="nt">--allow-unrelated-histories</span>
-
-git push <span class="nt">-u</span> origin master
-
-<span class="c"># 当前分支提交</span>
-
-git init
-
-git add <span class="nb">.</span>
-
-git commit <span class="nt">-m</span> <span class="s1">'commit message'</span>
-
-git push origin &lt;branch&gt;
-
-<span class="c"># 保留当前代码删除所有提交历史</span>
-
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 git checkout <span class="nt">--orphan</span> latest_branch
 
 git add <span class="nt">-A</span>
@@ -59,8 +40,15 @@ git branch <span class="nt">-m</span> master
 
 git push <span class="nt">-f</span> origin master
 
-<span class="c"># 强制提交</span>
+</code></pre></div></div>
 
+<h3 id="其他">其他</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c"># 提交前进行远程分支更新与本地合并</span>
+git pull origin &lt;branch&gt; <span class="nt">--allow-unrelated-histories</span>
+
+<span class="c"># 强制提交</span>
 git push origin &lt;branch&gt; <span class="nt">--force</span>
 </code></pre></div></div>
 
@@ -69,8 +57,11 @@ git push origin &lt;branch&gt; <span class="nt">--force</span>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 查看 remote</span>
 git remote <span class="nt">-v</span>
 
+<span class="c"># 修改 remote</span>
+git remote set-url &lt;origin&gt; &lt;repository-url&gt;
+
 <span class="c"># 添加 remote</span>
-git remote add &lt;origin&gt; <span class="k">*</span>.git
+git remote add &lt;origin&gt; &lt;repository-url&gt;
 
 <span class="c"># 删除 remote</span>
 git remote remove &lt;origin&gt;
@@ -84,30 +75,15 @@ git push &lt;origin&gt;
 <span class="c"># 查看其他 remote 提交日志</span>
 git ls-remote
 
-<span class="c"># 更改远程仓库（新的 remote）</span>
-git remote set-url origin <span class="k">*</span>@<span class="k">*</span>.git
-
-<span class="c"># 推送更改后的远程仓库并设置为默认跟踪分支</span>
-git push <span class="nt">-u</span> origin master
-
-<span class="c"># 推送并设置跟踪分支</span>
-git push <span class="nt">-u</span> origin &lt;branch&gt;
-</code></pre></div></div>
-
-<h2 id="更换远程仓库">更换远程仓库</h2>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 更改远程仓库地址</span>
-git remote set-url origin &lt;new-url&gt;
-
-<span class="c"># 获取远程仓库的所有分支</span>
-git fetch origin
-
 <span class="c"># 遍历所有本地分支并设置它们以跟踪相应的远程分支</span>
 git branch <span class="nt">-r</span> | <span class="nb">grep</span> <span class="nt">-v</span> <span class="s1">'\-&gt;'</span> | <span class="k">while </span><span class="nb">read </span>remote<span class="p">;</span> <span class="k">do </span>git branch <span class="nt">--track</span> <span class="s2">"</span><span class="k">${</span><span class="nv">remote</span><span class="p">#origin/</span><span class="k">}</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$remote</span><span class="s2">"</span><span class="p">;</span> <span class="k">done</span>
+
 </code></pre></div></div>
 
-<h3 id="tag">tag</h3>
+<h2 id="tag">tag</h2>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 查看本地</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c"># 查看本地</span>
 git tag
 
 <span class="c"># 查看远程</span>
@@ -124,22 +100,48 @@ git tag <span class="nt">-d</span> &lt;tag&gt;
 
 <span class="c"># 删除远程</span>
 git push origin :refs/tags/&lt;tag&gt;
+
 </code></pre></div></div>
 
 <h3 id="推送-pr">推送 pr</h3>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote add upstream https://<span class="k">*</span>@<span class="k">*</span>.git
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+git remote add &lt;origin&gt; &lt;repository-url&gt;
 
 git remote <span class="nt">-v</span>
 
-git fetch upstream
+git fetch &lt;origin&gt;
 
-git merge upstream/&lt;branch&gt;
+git merge &lt;origin&gt;/&lt;branch&gt;
 
 git push origin &lt;branch&gt;
+
 </code></pre></div></div>
 
-<h2 id="其他">其他</h2>
+<h2 id="保留本地当前代码改动撤销远程提交及本地-commit-状态">保留本地当前代码改动撤销远程提交及本地 commit 状态</h2>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c"># 保存当前的本地改动</span>
+git stash
+
+<span class="c"># 查看提交历史，找到您想要回退到的提交哈希值</span>
+git log
+
+<span class="c"># 回退到指定哈希值</span>
+git reset <span class="nt">--hard</span> &lt;<span class="nb">hash</span><span class="o">&gt;</span>
+
+<span class="c"># 强制推送到远程仓库，回退到指定的提交</span>
+git push <span class="nt">--force</span> origin &lt;branch-name&gt;
+
+<span class="c"># 恢复之前保存的本地改动</span>
+git stash pop
+
+<span class="c"># 取消最近的本地提交，但保留文件的更改在暂存区</span>
+git reset HEAD
+
+</code></pre></div></div>
+
+<h2 id="其他-1">其他</h2>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c"># 保留工作目录中更改回退到上一个提交（HEAD^）</span>
@@ -151,14 +153,17 @@ git reset <span class="nt">--hard</span> HEAD^
 <span class="c"># 丢弃工作目录中更改并将工作目录恢复到指定远程分支的最新状态</span>
 git reset <span class="nt">--hard</span> origin/&lt;branch&gt;
 
-<span class="c"># 不变更 commit 历史对某次 commit_id 进行更改</span>
-git revert commit_id
+<span class="c"># 不变更 commit 历史对某次提交进行更改</span>
+git revert &lt;commit-id&gt;
+
+<span class="c"># 取消合并</span>
+git merge <span class="nt">--abort</span>
 
 <span class="c"># 取消工作区更改</span>
-git checkout file
+git checkout &lt;file&gt;
 
 <span class="c"># 取消暂存区更改（add 操作）</span>
-git reset HEAD file
+git reset HEAD &lt;file&gt;
 
 <span class="c"># 查看上一次未 push 的 commit</span>
 git log &lt;branch&gt; ^origin/&lt;branch&gt;
@@ -167,7 +172,7 @@ git log &lt;branch&gt; ^origin/&lt;branch&gt;
 git reset HEAD~1
 
 <span class="c"># 回退到某一次未 push 的 commit</span>
-git reset commit_id
+git reset &lt;commit-id&gt;
 
 <span class="c"># 修正最后一个 commit 消息</span>
 git commit <span class="nt">--amend</span> <span class="nt">-m</span> <span class="s1">'commit message'</span>
@@ -182,10 +187,10 @@ git checkout <span class="nt">-b</span> &lt;branch&gt;
 git checkout <span class="nt">-b</span> &lt;branch&gt; origin/&lt;branch&gt;
 
 <span class="c"># 删除远程分支文件</span>
-git <span class="nb">rm</span> <span class="nt">-rf</span> file
+git <span class="nb">rm</span> <span class="nt">-rf</span> &lt;file&gt;
 
 <span class="c"># 删除远程分支文件但本地继续保存</span>
-git <span class="nb">rm</span> <span class="nt">--cached</span> file
+git <span class="nb">rm</span> <span class="nt">--cached</span> &lt;file&gt;
 
 <span class="c"># 本地分支关联到远程分支</span>
 git branch <span class="nt">--set-upstream-to</span><span class="o">=</span>origin/&lt;branch&gt; &lt;branch&gt;
@@ -198,5 +203,15 @@ git push origin <span class="nt">-d</span> &lt;branch&gt;
 
 <span class="c"># 多个分支推送</span>
 git push <span class="nt">--all</span> origin
+
+<span class="c"># 恢复文件到冲突状态</span>
+git checkout <span class="nt">--conflict</span><span class="o">=</span>merge &lt;file&gt;
+
+<span class="c"># 从远程仓库 clone 指定分支</span>
+git clone <span class="nt">-b</span> &lt;branch&gt; &lt;repository-url&gt; &lt;folder-name&gt;
+
+<span class="c"># 合并没有共同历史的分支</span>
+git merge remote/&lt;branch&gt; <span class="nt">--allow-unrelated-histories</span>
+
 </code></pre></div></div>
 :ET

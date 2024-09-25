@@ -12,49 +12,30 @@ categories: jekyll update
 git config --global user.name 'name'
 
 git config --global user.email 'mailbox@*’
+
 ```
 
 ## 提交
 
+### 初次提交
+
 ```shell
 
-# 初次提交
-
 git init
 
 git add .
 
 git commit -m 'commit message'
 
-git remote add origin *@*.git
+git remote add origin <repository-url>
 
-git push -u origin master
+git push -u origin <branch>
 
-# 远程分支合并提交
+```
 
-git init
+### 保留当前代码删除所有提交历史
 
-git add .
-
-git commit -m 'commit message'
-
-git remote add origin *@*.git
-
-git pull origin master --allow-unrelated-histories
-
-git push -u origin master
-
-# 当前分支提交
-
-git init
-
-git add .
-
-git commit -m 'commit message'
-
-git push origin <branch>
-
-# 保留当前代码删除所有提交历史
+```shell
 
 git checkout --orphan latest_branch
 
@@ -68,8 +49,16 @@ git branch -m master
 
 git push -f origin master
 
-# 强制提交
+```
 
+### 其他
+
+```shell
+
+# 提交前进行远程分支更新与本地合并
+git pull origin <branch> --allow-unrelated-histories
+
+# 强制提交
 git push origin <branch> --force
 ```
 
@@ -79,8 +68,11 @@ git push origin <branch> --force
 # 查看 remote
 git remote -v
 
+# 修改 remote
+git remote set-url <origin> <repository-url>
+
 # 添加 remote
-git remote add <origin> *.git
+git remote add <origin> <repository-url>
 
 # 删除 remote
 git remote remove <origin>
@@ -94,31 +86,15 @@ git push <origin>
 # 查看其他 remote 提交日志
 git ls-remote
 
-# 更改远程仓库（新的 remote）
-git remote set-url origin *@*.git
-
-# 推送更改后的远程仓库并设置为默认跟踪分支
-git push -u origin master
-
-# 推送并设置跟踪分支
-git push -u origin <branch>
-```
-
-## 更换远程仓库
-```shell
-# 更改远程仓库地址
-git remote set-url origin <new-url>
-
-# 获取远程仓库的所有分支
-git fetch origin
-
 # 遍历所有本地分支并设置它们以跟踪相应的远程分支
 git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
+
 ```
 
-### tag
+## tag
 
 ```shell
+
 # 查看本地
 git tag
 
@@ -136,20 +112,47 @@ git tag -d <tag>
 
 # 删除远程
 git push origin :refs/tags/<tag>
+
 ```
 
 ### 推送 pr
 
 ```shell
-git remote add upstream https://*@*.git
+
+git remote add <origin> <repository-url>
 
 git remote -v
 
-git fetch upstream
+git fetch <origin>
 
-git merge upstream/<branch>
+git merge <origin>/<branch>
 
 git push origin <branch>
+
+```
+
+## 保留本地当前代码改动撤销远程提交及本地 commit 状态
+
+```shell
+
+# 保存当前的本地改动
+git stash
+
+# 查看提交历史，找到您想要回退到的提交哈希值
+git log
+
+# 回退到指定哈希值
+git reset --hard <hash>
+
+# 强制推送到远程仓库，回退到指定的提交
+git push --force origin <branch-name>
+
+# 恢复之前保存的本地改动
+git stash pop
+
+# 取消最近的本地提交，但保留文件的更改在暂存区
+git reset HEAD
+
 ```
 
 ## 其他
@@ -165,14 +168,17 @@ git reset --hard HEAD^
 # 丢弃工作目录中更改并将工作目录恢复到指定远程分支的最新状态
 git reset --hard origin/<branch>
 
-# 不变更 commit 历史对某次 commit_id 进行更改
-git revert commit_id
+# 不变更 commit 历史对某次提交进行更改
+git revert <commit-id>
+
+# 取消合并
+git merge --abort
 
 # 取消工作区更改
-git checkout file
+git checkout <file>
 
 # 取消暂存区更改（add 操作）
-git reset HEAD file
+git reset HEAD <file>
 
 # 查看上一次未 push 的 commit
 git log <branch> ^origin/<branch>
@@ -181,7 +187,7 @@ git log <branch> ^origin/<branch>
 git reset HEAD~1
 
 # 回退到某一次未 push 的 commit
-git reset commit_id
+git reset <commit-id>
 
 # 修正最后一个 commit 消息
 git commit --amend -m 'commit message'
@@ -196,10 +202,10 @@ git checkout -b <branch>
 git checkout -b <branch> origin/<branch>
 
 # 删除远程分支文件
-git rm -rf file
+git rm -rf <file>
 
 # 删除远程分支文件但本地继续保存
-git rm --cached file
+git rm --cached <file>
 
 # 本地分支关联到远程分支
 git branch --set-upstream-to=origin/<branch> <branch>
@@ -212,4 +218,14 @@ git push origin -d <branch>
 
 # 多个分支推送
 git push --all origin
+
+# 恢复文件到冲突状态
+git checkout --conflict=merge <file>
+
+# 从远程仓库 clone 指定分支
+git clone -b <branch> <repository-url> <folder-name>
+
+# 合并没有共同历史的分支
+git merge remote/<branch> --allow-unrelated-histories
+
 ```
